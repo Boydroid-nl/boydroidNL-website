@@ -6,7 +6,7 @@ import AppCard from '../components/AppCard.astro';
 import LogoCarousel from '../components/LogoCarousel.astro';
 import { type Lang, appPath, contact, routes, splitAppId, useTranslations } from '../i18n';
 import heroImage from '../content/apps/padook/2.webp';
-import stepsImage from '../assets/about/iphone-design.png';
+import PhoneDesign from '../components/illustrations/PhoneDesign.astro';
 
 interface Props {
   lang: Lang;
@@ -156,7 +156,9 @@ const icons = [
   <section class="container-page mt-24">
     <div class="relative grid items-center gap-10 overflow-hidden rounded-xl border border-border bg-surface p-8 md:grid-cols-[2fr_3fr] md:p-12" data-reveal>
       <div class="blob -bottom-24 -left-16 size-80" aria-hidden="true"></div>
-      <Image src={stepsImage} alt="" width={360} densities={[1, 2]} class="relative mx-auto h-auto w-full max-w-60" />
+      <div class="relative mx-auto aspect-[21/20] w-full max-w-sm">
+        <PhoneDesign compact />
+      </div>
       <div class="relative">
         <h2 class="text-3xl font-bold tracking-tight">{copy.stepsTitle}</h2>
         {copy.steps.map((p) => <p class="mt-4 leading-relaxed text-muted">{p}</p>)}

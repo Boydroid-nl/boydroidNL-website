@@ -1,0 +1,162 @@
+---
+// Decorative phone split diagonally: the finished app on the left, its wireframe on the right.
+interface Props {
+  // Crop to the phone and its floating bits, for narrow columns
+  compact?: boolean;
+}
+const { compact = false } = Astro.props;
+
+const screen = { x: 238, y: 20, w: 164, h: 360 };
+const cards = [
+  { y: 82, h: 118, image: 'url(#pd-brand)' },
+  { y: 210, h: 112, image: 'url(#pd-mint)' },
+];
+const tabs = [262, 302, 342, 382];
+---
+
+<svg viewBox={compact ? '86 0 420 400' : '0 0 640 400'} class="h-full w-full overflow-visible" role="img" aria-label="App design: finished screen next to its wireframe">
+  <defs>
+    <linearGradient id="pd-brand" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" style="stop-color: var(--brand-blue)" />
+      <stop offset="0.55" style="stop-color: var(--brand-cyan)" />
+      <stop offset="1" style="stop-color: var(--brand-mint)" />
+    </linearGradient>
+    <linearGradient id="pd-mint" x1="0" y1="1" x2="1" y2="0">
+      <stop offset="0" style="stop-color: var(--brand-mint)" />
+      <stop offset="1" style="stop-color: var(--brand-cyan)" />
+    </linearGradient>
+    <clipPath id="pd-screen">
+      <rect x={screen.x} y={screen.y} width={screen.w} height={screen.h} rx="23" />
+    </clipPath>
+    {
+      cards.map((c, i) => (
+        <clipPath id={`pd-card-${i}`}>
+          <rect x="248" y={c.y} width="144" height={c.h} rx="12" />
+        </clipPath>
+      ))
+    }
+    <clipPath id="pd-wire">
+      <polygon points="362,20 402,20 402,380 278,380" />
+    </clipPath>
+  </defs>
+
+  <!-- Colour palette -->
+  <g class="float drop">
+    <rect x="96" y="238" width="112" height="44" rx="12" class="fill-bg stroke-border" />
+    <circle cx="118" cy="260" r="10" class="fill-brand-blue" />
+    <circle cx="142" cy="260" r="10" class="fill-brand-cyan" />
+    <circle cx="166" cy="260" r="10" class="fill-brand-mint" />
+    <circle cx="190" cy="260" r="10" class="fill-surface stroke-border" />
+  </g>
+
+  <!-- Phone -->
+  <g class="drop">
+    <rect x="230" y="12" width="180" height="376" rx="30" fill="#1b1f27" class="stroke-border" />
+  </g>
+
+  <g clip-path="url(#pd-screen)">
+    <!-- Finished -->
+    <rect x={screen.x} y={screen.y} width={screen.w} height={screen.h} class="fill-bg" />
+    <text x="254" y="39" class="fill-text" font-size="10" font-weight="600">9:41</text>
+    <circle cx="320" cy="58" r="6" class="fill-accent-3" />
+    <rect x="286" y="68" width="68" height="6" rx="3" class="fill-text" />
+    {
+      cards.map((c, i) => (
+        <g clip-path={`url(#pd-card-${i})`}>
+          <rect x="248" y={c.y} width="144" height={c.h} fill={c.image} />
+          <circle cx="360" cy={c.y + 24} r="10" fill="#fff" opacity="0.7" />
+          <path d={`M248 ${c.y + c.h - 30} l36 -26 l26 18 l24 -14 l58 36 v${16} h-144 Z`} fill="#fff" opacity="0.25" />
+          <rect x="258" y={c.y + c.h - 30} width="90" height="8" rx="2" fill="#fff" />
+          <rect x="258" y={c.y + c.h - 18} width="64" height="8" rx="2" fill="#fff" />
+        </g>
+      ))
+    }
+    <rect x={screen.x} y="334" width={screen.w} height="46" class="fill-bg" />
+    <rect x={screen.x} y="334" width="64" height="46" class="fill-accent-3" />
+    {
+      tabs.map((x, i) => (
+        <rect x={x - 7} y="344" width="14" height="14" rx="4" class={i === 0 ? 'fill-bg' : 'fill-primary'} opacity={i === 0 ? 1 : 0.8} />
+      ))
+    }
+
+    <!-- Wireframe -->
+    <g clip-path="url(#pd-wire)">
+      <rect x={screen.x} y={screen.y} width={screen.w} height={screen.h} class="fill-surface" />
+      <g class="stroke-muted" fill="none" stroke-width="1.2" opacity="0.6">
+        <circle cx="320" cy="58" r="6" />
+        <rect x="286" y="68" width="68" height="6" rx="3" />
+        {
+          cards.map((c, i) => (
+            <g>
+              <rect x="248" y={c.y} width="144" height={c.h} rx="12" class="fill-bg" />
+              <path d={`M248 ${c.y} L392 ${c.y + c.h} M392 ${c.y} L248 ${c.y + c.h}`} stroke-dasharray="4 4" opacity="0.5" clip-path={`url(#pd-card-${i})`} />
+            </g>
+          ))
+        }
+        {tabs.map((x) => <rect x={x - 7} y="344" width="14" height="14" rx="4" />)}
+      </g>
+      {
+        cards.map((c) => (
+          <g class="fill-muted" opacity="0.45">
+            <rect x="258" y={c.y + c.h - 30} width="90" height="8" rx="2" />
+            <rect x="258" y={c.y + c.h - 18} width="64" height="8" rx="2" />
+          </g>
+        ))
+      }
+      <g class="fill-muted" opacity="0.6">
+        <circle cx="372" cy="35" r="2.5" /><circle cx="380" cy="35" r="2.5" /><circle cx="388" cy="35" r="2.5" />
+      </g>
+    </g>
+
+    <line x1="362" y1="20" x2="278" y2="380" class="stroke-primary" stroke-width="1.5" />
+    <rect x="296" y="28" width="48" height="14" rx="7" fill="#1b1f27" />
+    <rect x="290" y="368" width="60" height="4" rx="2" class="fill-text" opacity="0.5" />
+  </g>
+
+  <!-- Drop target in the wireframe -->
+  <rect x="330" y="146" width="56" height="22" rx="11" fill="none" class="stroke-primary" stroke-width="1.5" stroke-dasharray="4 3" />
+
+  <!-- Cursor dragging a button into place -->
+  <g class="drag">
+    <g class="drop" transform="rotate(-4 452 166)">
+      <rect x="420" y="152" width="64" height="28" rx="14" fill="url(#pd-brand)" />
+      <rect x="436" y="163" width="32" height="6" rx="3" fill="#fff" />
+    </g>
+    <path
+      d="M466 170 v20 l5 -4.5 l3.5 8 l3.5 -1.5 l-3.5 -7.5 h6.5 Z"
+      fill="#1b1f27"
+      stroke="#fff"
+      stroke-width="1.5"
+      stroke-linejoin="round"
+    />
+  </g>
+</svg>
+
+<style>
+  .drop {
+    filter: drop-shadow(0 14px 24px color-mix(in srgb, var(--primary) 18%, transparent));
+  }
+  .float {
+    animation: float 5s ease-in-out infinite alternate;
+    animation-delay: var(--float-delay, 0s);
+  }
+  .drag {
+    animation: drag 3.2s ease-in-out infinite alternate;
+  }
+  @keyframes drag {
+    to {
+      transform: translate(-18px, -4px);
+    }
+  }
+  @keyframes float {
+    to {
+      transform: translateY(-6px);
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .float,
+    .drag {
+      animation: none;
+    }
+  }
+</style>

@@ -1,10 +1,9 @@
 ---
-import { Image } from 'astro:assets';
 import Base from '../layouts/Base.astro';
 import PageHeader from '../components/PageHeader.astro';
 import LogoCarousel from '../components/LogoCarousel.astro';
 import { type Lang, routes, useTranslations } from '../i18n';
-import helpImage from '../assets/about/iphone-design.png';
+import PhoneDesign from '../components/illustrations/PhoneDesign.astro';
 
 interface Props {
   lang: Lang;
@@ -87,7 +86,9 @@ const copy = {
         {copy.help.map((p) => <p class="mt-4 leading-relaxed text-muted">{p}</p>)}
         <a href={routes.contact[lang]} class="btn-primary mt-8">{t('cta.call')}</a>
       </div>
-      <Image src={helpImage} alt="" width={360} densities={[1, 2]} class="relative mx-auto h-auto w-full max-w-60" />
+      <div class="relative mx-auto aspect-[21/20] w-full max-w-sm">
+        <PhoneDesign compact />
+      </div>
     </div>
   </section>
 
