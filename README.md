@@ -28,4 +28,4 @@ Or serve the build with nginx: `npm run build && docker compose up` → http://l
 
 ## Deploying (VPS with nginx)
 
-The build is fully static. `DEPLOY_TARGET=boydroid@37.97.173.191:/home/boydroid/docker/boydroid/html ./deploy/deploy.sh` builds and rsyncs `dist/` into the `html` folder the nginx container serves. Mount `deploy/nginx.conf` as `/etc/nginx/conf.d/default.conf` (which also holds the old-URL redirects, since nginx ignores `public/_redirects`). SWAG proxies the domain to that container via `deploy/swag/boydroid.subfolder.conf` (the `location /` block in SWAG's default server).
+The build is fully static. `npm run deploy` (shorthand for `DEPLOY_TARGET=boydroid@37.97.173.191:/home/boydroid/docker/boydroid/html ./deploy/deploy.sh`) builds and rsyncs `dist/` into the `html` folder the nginx container serves. Mount `deploy/nginx.conf` as `/etc/nginx/conf.d/default.conf` (which also holds the old-URL redirects, since nginx ignores `public/_redirects`). SWAG proxies the domain to that container via `deploy/swag/boydroid.subfolder.conf` (the `location /` block in SWAG's default server).
