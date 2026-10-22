@@ -138,14 +138,6 @@ const icons = [
     </ul>
   </section>
 
-  <!-- Clients -->
-  <section class="mt-24">
-    <h2 class="container-page mb-8 text-center text-sm font-semibold tracking-wide text-muted uppercase" data-reveal>
-      {t('clients.title')}
-    </h2>
-    <div data-reveal style="--reveal-delay: 100ms"><LogoCarousel lang={lang} /></div>
-  </section>
-
   <!-- Portfolio -->
   <section class="container-page mt-24">
     <div class="flex flex-wrap items-end justify-between gap-4" data-reveal>
@@ -171,5 +163,13 @@ const icons = [
         <a href={routes.werkwijze[lang]} class="btn-primary mt-8">{t('cta.werkwijze')}</a>
       </div>
     </div>
+  </section>
+
+  <!-- Clients -->
+  <section class="mt-24">
+    <h2 class="container-page mb-8 text-center text-sm font-semibold tracking-wide text-muted uppercase" data-reveal>
+      {t('clients.title')}
+    </h2>
+    <div data-reveal style="--reveal-delay: 100ms"><LogoCarousel lang={lang} /></div>
   </section>
 </Base>

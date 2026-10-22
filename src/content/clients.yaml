@@ -22,6 +22,7 @@
   logo: ../assets/clients/meditation-moments.svg
   url: https://www.meditationmoments.nl/
   order: 5
+  current: false
 - id: porterenee
   name: PorteRenee
   logo: ../assets/clients/porterenee.png
