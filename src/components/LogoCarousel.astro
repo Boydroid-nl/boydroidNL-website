@@ -55,6 +55,33 @@ const half = Array.from({ length: Math.max(1, Math.ceil(MIN_ITEMS / Math.max(cli
   )
 }
 
+<script>
+  // Wide (or zoomed-out) screens can be wider than half the track, which leaves a gap before the loop restarts.
+  // Doubling the track keeps both halves identical; the duration grows with it so the speed stays the same.
+  function fill(marquee: HTMLElement) {
+    const track = marquee.querySelector<HTMLElement>('.track');
+    if (!track || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    const base = parseFloat(getComputedStyle(track).animationDuration) / (Number(track.dataset.copies) || 1);
+    let copies = Number(track.dataset.copies) || 1;
+    while (track.scrollWidth / 2 < marquee.clientWidth && copies < 16) {
+      [...track.children].forEach((li) => {
+        const clone = li.cloneNode(true) as HTMLElement;
+        clone.classList.add('dup');
+        clone.setAttribute('aria-hidden', 'true');
+        clone.querySelectorAll('a').forEach((a) => a.setAttribute('tabindex', '-1'));
+        clone.querySelectorAll('img').forEach((img) => img.setAttribute('alt', ''));
+        track.append(clone);
+      });
+      copies *= 2;
+    }
+    track.dataset.copies = String(copies);
+    track.style.animationDuration = `${base * copies}s`;
+  }
+  const marquees = document.querySelectorAll<HTMLElement>('.marquee');
+  const observer = new ResizeObserver((entries) => entries.forEach((e) => fill(e.target as HTMLElement)));
+  marquees.forEach((m) => observer.observe(m));
+</script>
+
 <style>
   .marquee {
     overflow: hidden;
@@ -66,7 +93,7 @@ const half = Array.from({ length: Math.max(1, Math.ceil(MIN_ITEMS / Math.max(cli
     animation: marquee 45s linear infinite;
   }
   .marquee:hover .track,
-  .marquee:focus-within .track {
+  .marquee:has(:focus-visible) .track {
     animation-play-state: paused;
   }
   .item {
