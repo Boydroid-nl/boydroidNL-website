@@ -1,0 +1,87 @@
+---
+import { Image } from 'astro:assets';
+import { type CollectionEntry, render } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import StoreBadges from '../components/StoreBadges.astro';
+import PlatformTags from '../components/PlatformTags.astro';
+import { appPath, routes, splitAppId, useTranslations } from '../i18n';
+
+interface Props {
+  app: CollectionEntry<'apps'>;
+  hasAlternate: boolean;
+}
+const { app, hasAlternate } = Astro.props;
+const { lang, slug } = splitAppId(app.id);
+const t = useTranslations(lang);
+const { Content } = await render(app);
+const d = app.data;
+const otherLang = lang === 'nl' ? 'en' : 'nl';
+---
+
+<Base
+  lang={lang}
+  title={d.title}
+  description={d.summary}
+  alternate={hasAlternate ? appPath(otherLang, slug) : routes.portfolio[otherLang]}
+>
+  <article>
+    <header class="relative overflow-x-clip">
+      <div class="bg-wash absolute inset-0" aria-hidden="true"></div>
+      <div class="container-page relative pt-10 pb-10 md:pt-16" data-reveal>
+      <a href={routes.portfolio[lang]} class="text-sm text-muted hover:text-primary">← {t('app.back')}</a>
+      <div class="mt-6 flex items-center gap-4">
+        {d.icon && <Image src={d.icon} alt="" width={128} class="size-16 rounded-xl shadow-sm" loading="eager" />}
+        <div>
+          <h1 class="text-4xl font-bold tracking-tight sm:text-5xl">{d.title}</h1>
+          <p class="mt-1 text-muted">
+            {t('app.client')}:{' '}
+            {d.clientUrl ? <a class="link" href={d.clientUrl} rel="noopener">{d.client}</a> : d.client}
+          </p>
+        </div>
+      </div>
+      <p class="mt-6 max-w-2xl text-lg leading-relaxed text-muted">{d.summary}</p>
+      <PlatformTags lang={lang} platforms={d.platforms} class="mt-6" />
+      <div class="mt-6">
+        <StoreBadges lang={lang} playStore={d.playStore} appStore={d.appStore} />
+      </div>
+      </div>
+    </header>
+
+    {
+      d.screenshots.length > 0 && (
+        <section class="tint-brand py-10" aria-label={t('app.screenshots')}>
+          <ul class="container-page flex snap-x snap-mandatory gap-4 overflow-x-auto pb-2" data-reveal-stagger>
+            {d.screenshots.map((shot, i) => (
+              <li class="shrink-0 snap-start" data-reveal>
+                <Image
+                  src={shot}
+                  alt={`${d.title} ${t('app.screenshots').toLowerCase()} ${i + 1}`}
+                  width={300}
+                  densities={[1, 2]}
+                  class="h-[28rem] w-auto rounded-xl border border-border object-contain shadow-sm sm:h-[32rem]"
+                  loading={i < 2 ? 'eager' : 'lazy'}
+                />
+              </li>
+            ))}
+          </ul>
+        </section>
+      )
+    }
+
+    <div class="container-page mt-12">
+      <div class="prose max-w-3xl" data-reveal>
+        <Content />
+      </div>
+      {
+        d.website && (
+          <p class="mt-10 text-muted">
+            {t('app.website')}{' '}
+            <a class="link" href={d.website.url} rel="noopener">
+              {d.website.label}
+            </a>
+          </p>
+        )
+      }
+    </div>
+  </article>
+</Base>

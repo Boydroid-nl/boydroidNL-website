@@ -1,0 +1,10 @@
+# Optional: serve the production build locally with nginx (http://localhost:8003).
+# Run `npm run build` first; nginx serves ./dist as-is (Cloudflare's _redirects are not applied here).
+services:
+  web:
+    image: nginx:1.27-alpine
+    ports:
+      - 8003:80
+    volumes:
+      - ./dist:/usr/share/nginx/html:ro
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro

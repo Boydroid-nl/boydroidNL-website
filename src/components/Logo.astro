@@ -1,0 +1,18 @@
+---
+// Boydroid wordmark: the icon keeps its colours, the text follows `currentColor`.
+import LogoSvg from '../assets/brand/boydroid-logo.svg';
+
+interface Props {
+  height?: number;
+  class?: string;
+}
+const { height = 36, class: className } = Astro.props;
+---
+
+<LogoSvg
+  height={height}
+  width={Math.round(height * (2491 / 685))}
+  class={className}
+  role="img"
+  aria-label="Boydroid"
+/>

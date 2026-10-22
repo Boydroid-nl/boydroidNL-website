@@ -1,0 +1,103 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHeader from '../components/PageHeader.astro';
+import { type Lang, contact, routes } from '../i18n';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+
+// Boydroid's office (Kasteelhof 4, Born); the bounding box sets the map's zoom level.
+const map = { lat: 51.0312782, lon: 5.8103048 };
+const mapBbox = [map.lon - 0.003, map.lat - 0.0012, map.lon + 0.003, map.lat + 0.0012]
+  .map((n) => n.toFixed(6))
+  .join(',');
+
+const copy = {
+  nl: {
+    title: 'Contact',
+    heading: 'Contact',
+    description: 'Neem contact op met Boydroid: bel, mail of WhatsApp ons, of kom langs in Born.',
+    intro:
+      'De wereld van apps is onze wereld. Maar we begrijpen maar al te goed dat het voor jou misschien nog (gedeeltelijk) een ver-van-mijn-bed-show is. Niet erg. We zijn dan wel techneuten, maar kunnen je op een eenvoudige manier uitleggen wat we doen. Denk je dat een app jouw probleem oplost? Maak dan een afspraak, dan maken we kennis. En drinken we koffie met iets lekkers erbij.',
+    office: 'Ons kantoor',
+    reach: 'Bel of mail ons',
+    about: 'Over ons',
+    visit: 'Bezoekadres',
+    kvk: 'KvK',
+    btw: 'btw',
+    map: 'Kaart met de locatie van Boydroid in Born',
+  },
+  en: {
+    title: 'Contact',
+    heading: 'Contact',
+    description: 'Contact Boydroid: call, email or WhatsApp us, or visit us in Born, the Netherlands.',
+    intro:
+      "The world of apps is our world. But we understand all too well that for you it may still be (partly) unfamiliar territory. That's fine. We may be techies, but we can explain what we do in simple terms. Think an app could solve your problem? Then make an appointment and let's get to know each other. Over coffee with something tasty on the side.",
+    office: 'Our office',
+    reach: 'Call or email us',
+    about: 'Company details',
+    visit: 'Visiting address',
+    kvk: 'Chamber of Commerce (KvK)',
+    btw: 'VAT',
+    map: 'Map showing the Boydroid office in Born',
+  },
+}[lang];
+---
+
+<Base lang={lang} title={copy.title} description={copy.description} alternate={routes.contact[lang === 'nl' ? 'en' : 'nl']}>
+  <PageHeader title={copy.heading} intro={copy.intro} />
+
+  <section class="container-page">
+    <h2 class="text-2xl font-bold tracking-tight" data-reveal>{copy.office}</h2>
+    <div class="mt-6 grid gap-4 md:grid-cols-3" data-reveal-stagger>
+      <div class="card card-hover relative overflow-hidden p-7" data-reveal>
+        <div class="bg-gradient-brand absolute inset-x-0 top-0 h-1" aria-hidden="true"></div>
+        <h3 class="font-semibold">{copy.reach}</h3>
+        <ul class="mt-4 space-y-2 text-muted">
+          <li><a class="link" href={`mailto:${contact.email}`}>{contact.email}</a></li>
+          <li>
+            <a class="link" href={contact.phoneHref}>{contact.phone}</a>
+            <span aria-hidden="true"> | </span>
+            <a class="link" href={contact.whatsapp} rel="noopener">WhatsApp</a>
+          </li>
+        </ul>
+      </div>
+      <div class="card card-hover relative overflow-hidden p-7" data-reveal>
+        <div class="bg-gradient-brand absolute inset-x-0 top-0 h-1" aria-hidden="true"></div>
+        <h3 class="font-semibold">{copy.about}</h3>
+        <ul class="mt-4 space-y-1 text-muted">
+          <li>{contact.company}</li>
+          {contact.postal.map((line) => <li>{line}</li>)}
+          <li>{copy.kvk}: {contact.kvk}</li>
+          <li>{copy.btw}: {contact.btw}</li>
+        </ul>
+      </div>
+      <div class="card card-hover relative overflow-hidden p-7" data-reveal>
+        <div class="bg-gradient-brand absolute inset-x-0 top-0 h-1" aria-hidden="true"></div>
+        <h3 class="font-semibold">{copy.visit}</h3>
+        <p class="mt-4 text-muted">{contact.visit}</p>
+        <a
+          class="link mt-4 inline-block text-sm"
+          href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(contact.visit)}`}
+          rel="noopener"
+          target="_blank">Google Maps →</a
+        >
+      </div>
+    </div>
+    <div class="card relative mt-4 overflow-hidden" data-reveal>
+      <div class="bg-gradient-brand absolute inset-x-0 top-0 z-10 h-1" aria-hidden="true"></div>
+      <iframe
+        class="block h-80 w-full border-0 md:h-96"
+        src={`https://www.openstreetmap.org/export/embed.html?bbox=${mapBbox}&layer=mapnik&marker=${map.lat},${map.lon}`}
+        title={copy.map}
+        loading="lazy"></iframe>
+    </div>
+    <p class="mt-2 text-right text-xs text-muted">
+      <a class="link" href={`https://www.openstreetmap.org/?mlat=${map.lat}&mlon=${map.lon}#map=18/${map.lat}/${map.lon}`} rel="noopener" target="_blank"
+        >OpenStreetMap →</a
+      >
+    </p>
+  </section>
+</Base>

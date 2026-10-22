@@ -1,0 +1,59 @@
+---
+import Logo from './Logo.astro';
+import { type Lang, contact, routes, useTranslations } from '../i18n';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+const year = new Date().getFullYear();
+---
+
+<footer class="relative mt-24 bg-surface">
+  <div class="bg-gradient-brand absolute inset-x-0 top-0 h-px opacity-70" aria-hidden="true"></div>
+  <div class="container-page grid gap-10 py-14 sm:grid-cols-2 lg:grid-cols-4">
+    <div class="space-y-4">
+      <a href={routes.home[lang]} class="inline-block text-text" aria-label="Boydroid home">
+        <Logo height={40} />
+      </a>
+      <address class="text-sm leading-relaxed text-muted not-italic">
+        {contact.company}<br />
+        {contact.visit}<br />
+        <a class="hover:text-primary" href={`mailto:${contact.email}`}>{contact.email}</a><br />
+        <a class="hover:text-primary" href={contact.phoneHref}>{contact.phone}</a>
+      </address>
+    </div>
+
+    <div>
+      <h2 class="text-sm font-semibold">{t('footer.quick')}</h2>
+      <ul class="mt-4 space-y-2 text-sm text-muted">
+        <li><a class="hover:text-primary" href={routes.werkwijze[lang]}>{t('nav.werkwijze')}</a></li>
+        <li><a class="hover:text-primary" href={routes.portfolio[lang]}>{t('nav.portfolio')}</a></li>
+        <li><a class="hover:text-primary" href={routes.team[lang]}>{t('nav.team')}</a></li>
+        <li><a class="hover:text-primary" href={routes.contact[lang]}>{t('nav.contact')}</a></li>
+      </ul>
+    </div>
+
+    <div>
+      <h2 class="text-sm font-semibold">{t('footer.useful')}</h2>
+      <ul class="mt-4 space-y-2 text-sm text-muted">
+        <li><a class="hover:text-primary" href={contact.terms}>{t('footer.terms')}</a></li>
+      </ul>
+    </div>
+
+    <div>
+      <h2 class="text-sm font-semibold">{t('footer.connect')}</h2>
+      <ul class="mt-4 space-y-2 text-sm text-muted">
+        <li><a class="hover:text-primary" href={contact.linkedin} rel="noopener">LinkedIn</a></li>
+        <li><a class="hover:text-primary" href={contact.whatsapp} rel="noopener">WhatsApp</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="border-t border-border">
+    <div class="container-page flex flex-col gap-2 py-6 text-xs text-muted sm:flex-row sm:justify-between">
+      <p>© {year} {contact.company}</p>
+      <p>KvK {contact.kvk} · btw {contact.btw}</p>
+    </div>
+  </div>
+</footer>

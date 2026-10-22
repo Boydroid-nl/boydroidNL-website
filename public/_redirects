@@ -1,0 +1,19 @@
+# Cloudflare Pages redirects: old WordPress URLs -> new site
+/wp-content/uploads/2026/05/Algemenevoorwaarden.pdf  /algemene-voorwaarden.pdf  301
+/algemenevoorwaarden.pdf                              /algemene-voorwaarden.pdf  301
+/av.pdf                                               /algemene-voorwaarden.pdf  301
+/av                                                   /algemene-voorwaarden.pdf  301
+/apps/newapps-white-label-ov-app                      /apps/ov-app/              301
+/apps/newapps-white-label-ov-app/                     /apps/ov-app/              301
+/customers/*                                          /portfolio/                301
+/klanten                                              /portfolio/                301
+/klanten/                                             /portfolio/                301
+/nieuws                                               /                          301
+/nieuws/                                              /                          301
+/kosten                                               /werkwijze/                301
+/kosten/                                              /werkwijze/                301
+/apps                                                 /portfolio/                301
+/apps/                                                /portfolio/                301
+/feed/*                                               /                          301
+/wp-admin/*                                           /                          301
+/wp-login.php                                         /                          301

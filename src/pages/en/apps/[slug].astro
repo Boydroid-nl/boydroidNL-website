@@ -1,0 +1,20 @@
+---
+import { getCollection } from 'astro:content';
+import AppDetail from '../../../views/AppDetail.astro';
+import { splitAppId } from '../../../i18n';
+
+export async function getStaticPaths() {
+  const apps = await getCollection('apps', ({ data }) => !data.draft);
+  const ids = new Set(apps.map((a) => a.id));
+  return apps
+    .filter((app) => splitAppId(app.id).lang === 'en')
+    .map((app) => {
+      const { slug } = splitAppId(app.id);
+      return { params: { slug }, props: { app, hasAlternate: ids.has(`${slug}/nl`) } };
+    });
+}
+
+const { app, hasAlternate } = Astro.props;
+---
+
+<AppDetail app={app} hasAlternate={hasAlternate} />

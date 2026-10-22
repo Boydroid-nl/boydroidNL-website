@@ -1,0 +1,47 @@
+---
+import { Image } from 'astro:assets';
+import Base from '../layouts/Base.astro';
+import PageHeader from '../components/PageHeader.astro';
+import { type Lang, routes } from '../i18n';
+import boy from '../assets/team/boy.jpg';
+import jorrit from '../assets/team/jorrit.jpg';
+import yori from '../assets/team/yori.jpg';
+import jop from '../assets/team/jop.jpg';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+
+const copy = {
+  nl: { title: 'Team', heading: 'De boys van Boydroid.', description: 'Maak kennis met het team van Boydroid.' },
+  en: { title: 'Team', heading: 'The boys of Boydroid.', description: 'Meet the Boydroid team.' },
+}[lang];
+
+const members = [
+  { name: 'Boy Lenssen', role: { nl: 'App Developer', en: 'App Developer' }, photo: boy },
+  { name: 'Jorrit Hoenjet', role: { nl: 'App Developer', en: 'App Developer' }, photo: jorrit },
+  { name: 'Yori Hoppenbrouwers', role: { nl: 'Projectmanager', en: 'Project Manager' }, photo: yori },
+  { name: 'Jop Knaapen', role: { nl: 'App Developer, UI/UX', en: 'App Developer, UI/UX' }, photo: jop },
+];
+---
+
+<Base lang={lang} title={copy.title} description={copy.description} alternate={routes.team[lang === 'nl' ? 'en' : 'nl']}>
+  <PageHeader eyebrow={copy.title} title={copy.heading} />
+  <section class="container-page">
+    <ul class="grid gap-6 sm:grid-cols-2 lg:grid-cols-4" data-reveal-stagger>
+      {
+        members.map((m) => (
+          <li class="group" data-reveal>
+            <div class="relative overflow-hidden rounded-xl bg-surface">
+              <Image src={m.photo} alt={m.name} width={480} class="aspect-square w-full object-cover transition-transform duration-500 group-hover:scale-105" />
+              <div class="bg-gradient-brand absolute inset-x-0 bottom-0 h-1 origin-left scale-x-0 transition-transform duration-500 group-hover:scale-x-100" aria-hidden="true"></div>
+            </div>
+            <h2 class="mt-4 text-lg font-semibold">{m.name}</h2>
+            <p class="text-sm text-muted">{m.role[lang]}</p>
+          </li>
+        ))
+      }
+    </ul>
+  </section>
+</Base>

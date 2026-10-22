@@ -1,0 +1,74 @@
+---
+import { Image } from 'astro:assets';
+import Base from '../layouts/Base.astro';
+import PageHeader from '../components/PageHeader.astro';
+import { type Lang, routes, useTranslations } from '../i18n';
+import office1 from '../assets/about/office-1.jpg';
+import office2 from '../assets/about/office-2.jpg';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+
+const copy = {
+  nl: {
+    title: 'Over ons',
+    heading: 'Boydroid ontwerpt en bouwt apps',
+    description: 'Boydroid is sinds 2014 een bureau voor app development (Android én iOS) en app design.',
+    text: 'Hoe noem je je bedrijf als je zelf Boy heet en het ontwikkelen van Android-apps je specialisme is? Precies. Dat was in 2014. Nu is Boydroid een bureau voor app development (Android én iOS) en app design. Er werken inmiddels al 4 boys (helaas nog geen girls). Jonge, leergierige developers en UX-designers die alles weten van de laatste tools en technieken. Bij Boydroid krijgen ze alle ruimte om het werk waar ze zo gek op zijn met veel vrijheid te doen. Waar en wanneer ze dat doen vinden we niet zo belangrijk. Zolang de kwaliteit maar top is en deadlines worden gehaald.',
+    curious: 'Benieuwd naar Boydroid?',
+    whoTitle: 'Wie wij zijn',
+    whoText: 'Het team van Boydroid.',
+    disciplinesTitle: 'Alle disciplines',
+    disciplines: ['Developers', 'UX-designers', 'Strategie'],
+  },
+  en: {
+    title: 'About us',
+    heading: 'Boydroid designs and builds apps',
+    description: 'Since 2014, Boydroid has been an agency for app development (Android and iOS) and app design.',
+    text: 'What do you call your company when your name is Boy and developing Android apps is your speciality? Exactly. That was in 2014. Today Boydroid is an agency for app development (Android and iOS) and app design. There are now 4 boys working here (sadly no girls yet). Young, eager-to-learn developers and UX designers who know everything about the latest tools and techniques. At Boydroid they get all the room and freedom to do the work they love. Where and when they do it is not that important to us. As long as the quality is top-notch and deadlines are met.',
+    curious: 'Curious about Boydroid?',
+    whoTitle: 'Who we are',
+    whoText: 'The Boydroid team.',
+    disciplinesTitle: 'All disciplines',
+    disciplines: ['Developers', 'UX designers', 'Strategy'],
+  },
+}[lang];
+---
+
+<Base lang={lang} title={copy.title} description={copy.description} alternate={routes.overOns[lang === 'nl' ? 'en' : 'nl']}>
+  <PageHeader eyebrow={copy.title} title={copy.heading} intro={copy.text}>
+    <div class="mt-8 flex flex-wrap items-center gap-4" data-reveal style="--reveal-delay: 240ms">
+      <span class="font-medium">{copy.curious}</span>
+      <a href={routes.contact[lang]} class="btn-primary">{t('nav.contact')}</a>
+    </div>
+  </PageHeader>
+
+  <section class="container-page grid gap-4 md:grid-cols-[3fr_2fr]" data-reveal-stagger>
+    <Image src={office1} alt="" width={900} densities={[1, 2]} class="h-72 w-full rounded-xl object-cover md:h-96" data-reveal />
+    <Image src={office2} alt="" width={600} densities={[1, 2]} class="h-72 w-full rounded-xl object-cover md:h-96" data-reveal />
+  </section>
+
+  <section class="container-page mt-24 grid gap-10 md:grid-cols-2">
+    <div data-reveal>
+      <h2 class="text-3xl font-bold tracking-tight">{copy.whoTitle}</h2>
+      <p class="mt-4 text-lg text-muted">{copy.whoText}</p>
+      <a href={routes.team[lang]} class="btn-secondary mt-6">{t('cta.team')}</a>
+    </div>
+    <div data-reveal style="--reveal-delay: 120ms">
+      <h2 class="text-3xl font-bold tracking-tight">{copy.disciplinesTitle}</h2>
+      <ul class="mt-6 grid gap-3 sm:grid-cols-3">
+        {
+          copy.disciplines.map((d) => (
+            <li class="card card-hover relative overflow-hidden px-4 py-5 text-center font-medium">
+              <span class="bg-gradient-brand absolute inset-x-0 top-0 h-1" aria-hidden="true" />
+              {d}
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+</Base>

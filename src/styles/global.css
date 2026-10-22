@@ -1,0 +1,256 @@
+@import 'tailwindcss';
+@import '@fontsource-variable/inter';
+
+/*
+  Theme tokens. Brand colours are sampled from the Boydroid icon (blue -> cyan -> mint).
+  Keep the brand colour for accents only: buttons, links, focus, small highlights.
+*/
+:root {
+  color-scheme: light;
+  --brand-blue: #005dfe;
+  --brand-cyan: #01befe;
+  --brand-mint: #4ce0bc;
+
+  --bg: #ffffff;
+  --surface: #f5f7fa;
+  --text: #323232;
+  --muted: #5d6470;
+  --border: #e3e7ed;
+  --primary: var(--brand-blue);
+  --primary-hover: #004bd0;
+  --primary-contrast: #ffffff;
+  --primary-soft: #eaf1ff;
+  --logo-chip: #ffffff;
+  --gradient-brand: linear-gradient(120deg, var(--brand-blue), var(--brand-cyan) 55%, var(--brand-mint));
+  --blob-opacity: 0.28;
+  --wash: 9%;
+  --grain-opacity: 0.14;
+  --accent-1: #005dfe;
+  --accent-2: #0a8fc7;
+  --accent-3: #0e9a7b;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    color-scheme: dark;
+    --bg: #0f1115;
+    --surface: #171a21;
+    --text: #e7e9ee;
+    --muted: #a0a7b4;
+    --border: #2a2f3a;
+    --primary: #5c9bff;
+    --primary-hover: #7eb0ff;
+    --primary-contrast: #0b1020;
+    --primary-soft: #18233a;
+    --logo-chip: #f3f5f8;
+    --blob-opacity: 0.2;
+    --wash: 12%;
+    --grain-opacity: 0.06;
+    --accent-1: #5c9bff;
+    --accent-2: #3cc8f5;
+    --accent-3: #4ce0bc;
+  }
+}
+
+:root[data-theme='dark'] {
+  color-scheme: dark;
+  --bg: #0f1115;
+  --surface: #171a21;
+  --text: #e7e9ee;
+  --muted: #a0a7b4;
+  --border: #2a2f3a;
+  --primary: #5c9bff;
+  --primary-hover: #7eb0ff;
+  --primary-contrast: #0b1020;
+  --primary-soft: #18233a;
+  --logo-chip: #f3f5f8;
+  --blob-opacity: 0.2;
+  --wash: 12%;
+  --grain-opacity: 0.06;
+  --accent-1: #5c9bff;
+  --accent-2: #3cc8f5;
+  --accent-3: #4ce0bc;
+}
+
+@theme inline {
+  --font-sans: 'Inter Variable', ui-sans-serif, system-ui, sans-serif;
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-text: var(--text);
+  --color-muted: var(--muted);
+  --color-border: var(--border);
+  --color-primary: var(--primary);
+  --color-primary-hover: var(--primary-hover);
+  --color-primary-contrast: var(--primary-contrast);
+  --color-primary-soft: var(--primary-soft);
+  --color-logo-chip: var(--logo-chip);
+  --color-brand-blue: var(--brand-blue);
+  --color-brand-cyan: var(--brand-cyan);
+  --color-brand-mint: var(--brand-mint);
+  --color-accent-1: var(--accent-1);
+  --color-accent-2: var(--accent-2);
+  --color-accent-3: var(--accent-3);
+}
+
+@layer base {
+  html {
+    background: var(--bg);
+    color: var(--text);
+    -webkit-font-smoothing: antialiased;
+    scroll-behavior: smooth;
+  }
+  body {
+    @apply bg-bg text-text font-sans;
+  }
+  :focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 3px;
+    border-radius: 4px;
+  }
+  ::selection {
+    background: var(--primary-soft);
+  }
+}
+
+@layer components {
+  .container-page {
+    @apply mx-auto w-full max-w-6xl px-4 sm:px-6;
+  }
+  .btn-primary,
+  .btn-secondary {
+    @apply inline-flex items-center justify-center gap-2 rounded-lg px-5 py-2.5 text-sm font-semibold transition duration-200;
+  }
+  .btn-primary {
+    @apply bg-primary text-primary-contrast hover:-translate-y-px hover:bg-primary-hover;
+  }
+  .btn-primary:hover {
+    box-shadow: 0 8px 20px -8px color-mix(in srgb, var(--primary) 70%, transparent);
+  }
+  .btn-secondary {
+    @apply border border-border bg-bg text-text hover:border-primary hover:text-primary;
+  }
+  .eyebrow {
+    @apply inline-flex items-center gap-2 text-sm font-semibold tracking-wide text-primary uppercase;
+  }
+  .eyebrow::before {
+    content: '';
+    width: 1.5rem;
+    height: 2px;
+    border-radius: 2px;
+    background: var(--gradient-brand);
+  }
+
+  /* Brand colour splashes */
+  .text-gradient {
+    background: var(--gradient-brand);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .bg-gradient-brand {
+    background-image: var(--gradient-brand);
+  }
+  /* Blue-only variant for filled controls, keeps white text readable */
+  .bg-gradient-button {
+    background-image: linear-gradient(135deg, #0048d6, var(--brand-blue) 55%, #2079ff);
+  }
+  /* Barely visible brand wash with film grain, fades out towards the bottom */
+  .bg-wash {
+    background:
+      radial-gradient(70% 90% at 15% 0%, color-mix(in srgb, var(--brand-blue) var(--wash), transparent), transparent 70%),
+      radial-gradient(60% 80% at 90% 10%, color-mix(in srgb, var(--brand-mint) var(--wash), transparent), transparent 70%);
+    mask-image: linear-gradient(to bottom, #000 55%, transparent);
+  }
+  .bg-wash::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    opacity: var(--grain-opacity);
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.5 0 0 0 0 0.5 0 0 0 0 0.5 0 0 0 1.6 -0.3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    background-size: 180px 180px;
+    pointer-events: none;
+  }
+  .blob {
+    position: absolute;
+    border-radius: 9999px;
+    background: var(--gradient-brand);
+    filter: blur(70px);
+    opacity: var(--blob-opacity);
+    pointer-events: none;
+    animation: blob-float 14s ease-in-out infinite alternate;
+  }
+  .tint-brand {
+    background:
+      radial-gradient(120% 80% at 50% 120%, color-mix(in srgb, var(--brand-cyan) 22%, transparent), transparent 70%),
+      var(--surface);
+  }
+
+  /* Cards: small radius, lift + brand glow on hover */
+  .card {
+    @apply rounded-xl border border-border bg-bg transition duration-300;
+  }
+  a.card:hover,
+  .card-hover:hover {
+    transform: translateY(-3px);
+    border-color: color-mix(in srgb, var(--primary) 45%, var(--border));
+    box-shadow: 0 16px 36px -18px color-mix(in srgb, var(--primary) 45%, transparent);
+  }
+  .link,
+  .prose a {
+    @apply text-primary underline decoration-1 underline-offset-2 hover:text-primary-hover;
+  }
+
+  /* Rendered Markdown (app pages) */
+  .prose {
+    @apply max-w-none leading-relaxed text-text;
+  }
+  .prose > * + * {
+    @apply mt-4;
+  }
+  .prose h2 {
+    @apply mt-10 text-2xl font-semibold tracking-tight;
+  }
+  .prose h3 {
+    @apply mt-8 text-xl font-semibold;
+  }
+  .prose ul {
+    @apply list-disc space-y-2 pl-5 marker:text-primary;
+  }
+  .prose strong {
+    @apply font-semibold;
+  }
+}
+
+/* Scroll reveal: only hidden when JS runs (html.js), see Base.astro */
+html.js [data-reveal] {
+  opacity: 0;
+  transform: translateY(18px);
+  transition:
+    opacity 0.7s ease,
+    transform 0.7s cubic-bezier(0.2, 0.7, 0.2, 1);
+  transition-delay: var(--reveal-delay, 0ms);
+}
+html.js [data-reveal].is-visible {
+  opacity: 1;
+  transform: none;
+}
+html.js [data-reveal].no-reveal-transition {
+  transition: none;
+}
+
+@keyframes blob-float {
+  to {
+    transform: translate(30px, -20px) scale(1.08);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html.js [data-reveal] {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+  .blob {
+    animation: none;
+  }
+}

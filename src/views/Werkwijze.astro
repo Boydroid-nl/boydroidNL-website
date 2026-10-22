@@ -1,0 +1,100 @@
+---
+import { Image } from 'astro:assets';
+import Base from '../layouts/Base.astro';
+import PageHeader from '../components/PageHeader.astro';
+import LogoCarousel from '../components/LogoCarousel.astro';
+import { type Lang, routes, useTranslations } from '../i18n';
+import helpImage from '../assets/about/iphone-design.png';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+
+const copy = {
+  nl: {
+    title: 'Werkwijze',
+    heading: 'Van idee tot product',
+    description: 'Zo werkt Boydroid: van een vrijblijvende kennismaking tot oplevering en nazorg van je app.',
+    steps: [
+      ['Kennismaking', 'Tijdens een vrijblijvend gesprek bespreken we samen de wensen en eisen. We bekijken wat haalbaar is en hoe we kunnen helpen.'],
+      ['Voorstel', 'We analyseren het vraagstuk en maken een concreet voorstel, inclusief planning en kosten.'],
+      ['Ontwikkeling', 'Het project wordt in stappen uitgewerkt. We zorgen ervoor dat je regelmatig op de hoogte blijft via updates.'],
+      ['Testfase', 'Samen testen we de oplossing grondig om er zeker van te zijn dat alles werkt zoals verwacht.'],
+      ['Oplevering', 'We leveren de oplossing op en bieden, indien nodig, begeleiding bij de implementatie.'],
+      ['Nazorg', 'We blijven beschikbaar voor ondersteuning, updates en verdere aanpassingen.'],
+    ],
+    extra: 'Extra service',
+    helpTitle: "Ik heb al ’n app, maar zoek hulp",
+    help: [
+      'Ook als je al een app hebt, kunnen wij veel voor je betekenen. Bijvoorbeeld als je een Android-app hebt, maar nu ook een iOS-versie wilt. Of andersom. Of als je appbouwer om welke reden dan ook is gestopt en je een professionele partij zoekt die het beheer van jouw app kan overnemen. Dat gebeurt best wel vaak. Zelfs het opnieuw bouwen of verbeteren van een bestaande app kun je aan ons overlaten.',
+      'Heb je problemen met je app, zoek je naar verbetermogelijkheden of wil je gewoon dat iemand anders jouw app in beheer neemt?',
+    ],
+  },
+  en: {
+    title: 'How we work',
+    heading: 'From idea to product',
+    description: 'How Boydroid works: from a no-obligation first meeting to delivery and aftercare of your app.',
+    steps: [
+      ['Introduction', 'In a no-obligation conversation we discuss your wishes and requirements together. We look at what is feasible and how we can help.'],
+      ['Proposal', 'We analyse the question and make a concrete proposal, including planning and costs.'],
+      ['Development', 'The project is worked out in steps. We make sure you stay up to date through regular updates.'],
+      ['Testing', 'Together we test the solution thoroughly to make sure everything works as expected.'],
+      ['Delivery', 'We deliver the solution and, if needed, offer guidance during implementation.'],
+      ['Aftercare', 'We remain available for support, updates and further changes.'],
+    ],
+    extra: 'Extra service',
+    helpTitle: 'I already have an app, but need help',
+    help: [
+      'Even if you already have an app, we can do a lot for you. For example, if you have an Android app but now also want an iOS version. Or the other way around. Or if your app developer has stopped for whatever reason and you are looking for a professional party to take over the management of your app. That happens quite often. You can even leave rebuilding or improving an existing app to us.',
+      'Having problems with your app, looking for ways to improve it, or simply want someone else to take over managing your app?',
+    ],
+  },
+}[lang];
+
+// Step numbers run from blue (first) to green (last), one solid colour each.
+---
+
+<Base lang={lang} title={copy.title} description={copy.description} alternate={routes.werkwijze[lang === 'nl' ? 'en' : 'nl']}>
+  <PageHeader eyebrow={copy.title} title={copy.heading} />
+
+  <section class="container-page">
+    <ol class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3" data-reveal-stagger>
+      {
+        copy.steps.map(([title, text], i) => (
+          <li class="card p-7" data-reveal>
+            <span
+              class="text-4xl font-bold tracking-tight"
+              style={`color: color-mix(in oklch, var(--accent-3) ${Math.round((i / (copy.steps.length - 1)) * 100)}%, var(--accent-1))`}
+            >
+              {String(i + 1).padStart(2, '0')}
+            </span>
+            <h2 class="mt-3 text-xl font-semibold">{title}</h2>
+            <p class="mt-3 text-sm leading-relaxed text-muted">{text}</p>
+          </li>
+        ))
+      }
+    </ol>
+  </section>
+
+  <section class="container-page mt-24">
+    <div class="relative grid items-center gap-10 overflow-hidden rounded-xl border border-border bg-surface p-8 md:grid-cols-[3fr_2fr] md:p-12" data-reveal>
+      <div class="blob -right-16 -bottom-24 size-80" aria-hidden="true"></div>
+      <div class="relative">
+        <p class="eyebrow">{copy.extra}</p>
+        <h2 class="mt-3 text-3xl font-bold tracking-tight">{copy.helpTitle}</h2>
+        {copy.help.map((p) => <p class="mt-4 leading-relaxed text-muted">{p}</p>)}
+        <a href={routes.contact[lang]} class="btn-primary mt-8">{t('cta.call')}</a>
+      </div>
+      <Image src={helpImage} alt="" width={360} densities={[1, 2]} class="relative mx-auto h-auto w-full max-w-60" />
+    </div>
+  </section>
+
+  <section class="mt-24">
+    <h2 class="container-page mb-8 text-center text-sm font-semibold tracking-wide text-muted uppercase" data-reveal>
+      {t('clients.title')}
+    </h2>
+    <div data-reveal style="--reveal-delay: 100ms"><LogoCarousel lang={lang} /></div>
+  </section>
+</Base>

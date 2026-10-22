@@ -1,0 +1,175 @@
+---
+import { Image } from 'astro:assets';
+import { getCollection } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import AppCard from '../components/AppCard.astro';
+import LogoCarousel from '../components/LogoCarousel.astro';
+import { type Lang, appPath, contact, routes, splitAppId, useTranslations } from '../i18n';
+import heroImage from '../content/apps/padook/2.webp';
+import stepsImage from '../assets/about/iphone-design.png';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+
+const copy = {
+  nl: {
+    description:
+      'Boydroid ontwikkelt en ontwerpt Android- en iOS-apps. Van apps voor een handjevol gebruikers tot populaire apps met meer dan 250.000 gebruikers.',
+    title: ['Wij ontwikkelen', 'apps'],
+    intro:
+      'Bij Boydroid ontwikkelen en ontwerpen we Android én iOS apps. Van apps die door een handjevol mensen binnen één bedrijf worden gebruikt, tot populaire apps met meer dan 250.000 gebruikers. Waarmee kunnen we jou helpen?',
+    heroAlt: 'Padook, de app van Boydroid om direct een padelbaan te boeken',
+    services: [
+      {
+        title: 'Bedenken',
+        text: 'Wij transformeren je ideeën in concrete plannen met behulp van de nieuwste technologieën, klaar om de markt te veroveren. Samen met jou definiëren we de essentie van je app en zetten deze om in een helder actieplan.',
+      },
+      {
+        title: 'Uitvoeren',
+        text: 'Onze ervaren ontwikkelaars bouwen hoogwaardige apps die perfect aansluiten bij jouw visie. Door zorgvuldige afstemming tussen design en techniek garanderen we een soepele en aantrekkelijke gebruikerservaring.',
+      },
+      {
+        title: 'Onderhouden',
+        text: 'Na de lancering zorgen wij voor continue ondersteuning en optimalisatie van je app. Door regelmatige updates en aanpassingen blijft je app presteren en groeien in een snel veranderende digitale wereld.',
+      },
+    ],
+    portfolio: 'Portfolio',
+    portfolioTitle: 'Apps waar we apetrots op zijn.',
+    allApps: 'Bekijk alle apps',
+    stepsTitle: 'Apps bouwen. Stap voor stap.',
+    steps: [
+      'Stel dat de oplossing voor jouw probleem een app is. Je weet ongeveer hoe het kostenplaatje eruitziet en besluit om een afspraak met ons te maken.',
+      "Da's een goede eerste stap. En er volgen er nog meer, want elk project bestaat uit een aantal vaste stappen die wij met jou doorlopen. Door onze gestructureerde manier van werken weet je altijd precies waar je aan toe bent. Prettig toch?",
+    ],
+  },
+  en: {
+    description:
+      'Boydroid develops and designs Android and iOS apps. From apps used by a handful of people to popular apps with more than 250,000 users.',
+    title: ['We build', 'apps'],
+    intro:
+      'At Boydroid we develop and design Android and iOS apps. From apps used by a handful of people within a single company to popular apps with more than 250,000 users. How can we help you?',
+    heroAlt: 'Padook, the Boydroid app for booking a padel court instantly',
+    services: [
+      {
+        title: 'Ideate',
+        text: 'We turn your ideas into concrete plans using the latest technologies, ready to take on the market. Together with you, we define the essence of your app and turn it into a clear plan of action.',
+      },
+      {
+        title: 'Build',
+        text: 'Our experienced developers build high-quality apps that match your vision. By carefully aligning design and engineering, we deliver a smooth and attractive user experience.',
+      },
+      {
+        title: 'Maintain',
+        text: 'After launch we provide ongoing support and optimisation for your app. With regular updates and improvements, your app keeps performing and growing in a fast-changing digital world.',
+      },
+    ],
+    portfolio: 'Portfolio',
+    portfolioTitle: 'Apps we are really proud of.',
+    allApps: 'View all apps',
+    stepsTitle: 'Building apps. Step by step.',
+    steps: [
+      'Say the solution to your problem is an app. You have a rough idea of the costs and decide to make an appointment with us.',
+      "That's a good first step. And more will follow, because every project consists of a set of fixed steps we go through together. Thanks to our structured way of working, you always know exactly where you stand. Nice, right?",
+    ],
+  },
+}[lang];
+
+const featured = (await getCollection('apps', ({ id, data }) => splitAppId(id).lang === lang && data.featured && !data.draft)).sort(
+  (a, b) => a.data.order - b.data.order,
+);
+
+// Solid, distinct colour per service icon
+const iconBg = ['bg-accent-1', 'bg-accent-2', 'bg-accent-3'];
+
+const icons = [
+  // lightbulb, code, refresh
+  'M9 18h6M10 21h4M12 3a6 6 0 0 0-3.5 10.9c.6.4 1 1.1 1 1.8V16h5v-.3c0-.7.4-1.4 1-1.8A6 6 0 0 0 12 3Z',
+  'M8 8 4 12l4 4M16 8l4 4-4 4M14 5l-4 14',
+  'M20 11a8 8 0 0 0-14.3-4.9L4 8M4 4v4h4M4 13a8 8 0 0 0 14.3 4.9L20 16m0 4v-4h-4',
+];
+---
+
+<Base lang={lang} description={copy.description} alternate={routes.home[lang === 'nl' ? 'en' : 'nl']}>
+  <!-- Hero -->
+  <section class="relative overflow-x-clip">
+    <div class="bg-wash absolute inset-0" aria-hidden="true"></div>
+    <div class="container-page relative grid items-center gap-10 pt-12 pb-16 md:grid-cols-2 md:pt-20">
+      <div>
+        <h1 class="text-4xl font-bold tracking-tight sm:text-5xl lg:text-6xl" data-reveal>
+          {copy.title[0]} <span class="text-gradient">{copy.title[1]}</span>.
+        </h1>
+        <p class="mt-6 max-w-xl text-lg leading-relaxed text-muted" data-reveal style="--reveal-delay: 100ms">
+          {copy.intro}
+        </p>
+        <div class="mt-8 flex flex-wrap gap-3" data-reveal style="--reveal-delay: 200ms">
+          <a href={`mailto:${contact.appEmail}`} class="btn-primary">{t('cta.app')}</a>
+          <a href={routes.werkwijze[lang]} class="btn-secondary">{t('cta.how')}</a>
+        </div>
+      </div>
+      <div class="relative" data-reveal style="--reveal-delay: 150ms">
+        <div class="blob top-1/4 left-1/2 size-72 -translate-x-1/2" aria-hidden="true"></div>
+        <div class="blob bottom-0 left-1/4 size-48 [animation-delay:-7s]" aria-hidden="true"></div>
+        <a href={appPath(lang, 'padook')} class="relative mx-auto block max-w-[17rem] transition-transform duration-500 hover:-translate-y-1 md:max-w-xs">
+          <Image src={heroImage} alt={copy.heroAlt} width={320} densities={[1, 2]} loading="eager" fetchpriority="high" class="h-auto w-full rounded-xl shadow-2xl" />
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Bedenken / Uitvoeren / Onderhouden -->
+  <section class="container-page">
+    <ul class="grid gap-4 md:grid-cols-3" data-reveal-stagger>
+      {
+        copy.services.map((s, i) => (
+          <li class="card card-hover p-7" data-reveal>
+            <span class:list={['inline-flex size-11 items-center justify-center rounded-lg text-white shadow-sm', iconBg[i]]}>
+              <svg class="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d={icons[i]} />
+              </svg>
+            </span>
+            <h2 class="mt-5 text-xl font-semibold">{s.title}</h2>
+            <p class="mt-3 text-sm leading-relaxed text-muted">{s.text}</p>
+          </li>
+        ))
+      }
+    </ul>
+  </section>
+
+  <!-- Clients -->
+  <section class="mt-24">
+    <h2 class="container-page mb-8 text-center text-sm font-semibold tracking-wide text-muted uppercase" data-reveal>
+      {t('clients.title')}
+    </h2>
+    <div data-reveal style="--reveal-delay: 100ms"><LogoCarousel lang={lang} /></div>
+  </section>
+
+  <!-- Portfolio -->
+  <section class="container-page mt-24">
+    <div class="flex flex-wrap items-end justify-between gap-4" data-reveal>
+      <div>
+        <p class="eyebrow">{copy.portfolio}</p>
+        <h2 class="mt-2 text-3xl font-bold tracking-tight">{copy.portfolioTitle}</h2>
+      </div>
+      <a href={routes.portfolio[lang]} class="link text-sm font-medium">{copy.allApps} →</a>
+    </div>
+    <div class="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3" data-reveal-stagger>
+      {featured.map((app) => <AppCard app={app} />)}
+    </div>
+  </section>
+
+  <!-- Step by step -->
+  <section class="container-page mt-24">
+    <div class="relative grid items-center gap-10 overflow-hidden rounded-xl border border-border bg-surface p-8 md:grid-cols-[2fr_3fr] md:p-12" data-reveal>
+      <div class="blob -bottom-24 -left-16 size-80" aria-hidden="true"></div>
+      <Image src={stepsImage} alt="" width={360} densities={[1, 2]} class="relative mx-auto h-auto w-full max-w-60" />
+      <div class="relative">
+        <h2 class="text-3xl font-bold tracking-tight">{copy.stepsTitle}</h2>
+        {copy.steps.map((p) => <p class="mt-4 leading-relaxed text-muted">{p}</p>)}
+        <a href={routes.werkwijze[lang]} class="btn-primary mt-8">{t('cta.werkwijze')}</a>
+      </div>
+    </div>
+  </section>
+</Base>

@@ -1,0 +1,39 @@
+# Companies shown in the "Tevreden klanten" logo carousel.
+# Set `current: false` to hide a client without deleting it. Lower `order` comes first.
+- id: infoplaza
+  name: Infoplaza
+  logo: ../assets/clients/infoplaza.svg
+  url: https://www.infoplaza.com/nl/mobiliteit
+  order: 1
+- id: traffic-and-more
+  name: Traffic & More
+  url: https://www.trafficandmore.nl/
+  order: 2
+- id: innervate
+  name: Innervate
+  logo: ../assets/clients/innervate.svg
+  order: 3
+- id: funeplan
+  name: Funeplan
+  order: 4
+  current: false
+- id: meditation-moments
+  name: Meditation Moments
+  logo: ../assets/clients/meditation-moments.svg
+  url: https://www.meditationmoments.nl/
+  order: 5
+- id: porterenee
+  name: PorteRenee
+  logo: ../assets/clients/porterenee.png
+  url: https://porterenee.nl
+  order: 6
+  current: false
+- id: memorial-cube
+  name: Memorial Cube
+  logo: ../assets/clients/memorial-cube.png
+  order: 7
+- id: ols
+  name: OLS Born
+  logo: ../assets/clients/ols.png
+  current: false
+  order: 8

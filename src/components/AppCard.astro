@@ -1,0 +1,47 @@
+---
+import { Image } from 'astro:assets';
+import type { CollectionEntry } from 'astro:content';
+import PlatformTags from './PlatformTags.astro';
+import { appPath, splitAppId, useTranslations } from '../i18n';
+
+interface Props {
+  app: CollectionEntry<'apps'>;
+}
+const { app } = Astro.props;
+const { lang, slug } = splitAppId(app.id);
+const t = useTranslations(lang);
+const { title, summary, client, icon, cover, screenshots, platforms } = app.data;
+const visual = cover ?? screenshots[0];
+---
+
+<!-- The title link stretches over the whole card; platform tags sit above it as their own links. -->
+<article class="card card-hover group relative flex flex-col overflow-hidden" data-reveal>
+  <div class="tint-brand flex h-72 items-end justify-center overflow-hidden px-8 pt-8">
+    {
+      visual ? (
+        <Image
+          src={visual}
+          alt=""
+          width={320}
+          densities={[1, 2]}
+          class="h-full w-auto object-contain object-top transition-transform duration-500 group-hover:-translate-y-1.5"
+        />
+      ) : (
+        icon && <Image src={icon} alt="" width={128} class="mb-16 size-32 rounded-xl" />
+      )
+    }
+  </div>
+  <div class="flex flex-1 flex-col gap-3 p-6">
+    <div class="flex items-center gap-3">
+      {icon && <Image src={icon} alt="" width={96} class="size-10 rounded-lg" />}
+      <div>
+        <h3 class="text-lg font-semibold leading-tight">
+          <a href={appPath(lang, slug)} class="after:absolute after:inset-0 group-hover:text-primary">{title}</a>
+        </h3>
+        <p class="text-sm text-muted">{t('app.client')}: {client}</p>
+      </div>
+    </div>
+    <p class="text-sm leading-relaxed text-muted">{summary}</p>
+    <PlatformTags lang={lang} platforms={platforms} class="mt-auto pt-2" />
+  </div>
+</article>

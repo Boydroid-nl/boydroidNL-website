@@ -1,0 +1,75 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import PageHeader from '../components/PageHeader.astro';
+import AppCard from '../components/AppCard.astro';
+import { type Lang, type Platform, platformPath, platforms, routes, splitAppId, useTranslations } from '../i18n';
+
+interface Props {
+  lang: Lang;
+  /** When set, only apps for this platform are shown. */
+  platform?: Platform;
+}
+const { lang, platform } = Astro.props;
+const t = useTranslations(lang);
+const otherLang = lang === 'nl' ? 'en' : 'nl';
+
+const copy = {
+  nl: {
+    title: 'Portfolio',
+    heading: 'Apps waar we apetrots op zijn.',
+    description: 'Een selectie van de Android- en iOS-apps die Boydroid heeft ontwikkeld.',
+  },
+  en: {
+    title: 'Portfolio',
+    heading: 'Apps we are really proud of.',
+    description: 'A selection of the Android and iOS apps Boydroid has built.',
+  },
+}[lang];
+
+const all = (await getCollection('apps', ({ id, data }) => splitAppId(id).lang === lang && !data.draft)).sort(
+  (a, b) => a.data.order - b.data.order,
+);
+const apps = platform ? all.filter((a) => a.data.platforms.includes(platform)) : all;
+// Only offer filters that have at least one app.
+const filters = platforms.filter((p) => all.some((a) => a.data.platforms.includes(p)));
+
+const filterClass = (active: boolean) => [
+  'inline-flex items-center gap-2 rounded-md border px-3 py-1.5 text-sm font-medium transition-colors',
+  active
+    ? 'border-transparent bg-gradient-button text-white shadow-sm'
+    : 'border-border text-muted hover:border-primary hover:text-primary',
+];
+const count = (p?: Platform) => (p ? all.filter((a) => a.data.platforms.includes(p)).length : all.length);
+---
+
+<Base
+  lang={lang}
+  title={platform ? `${t('filter.title')} ${platform}` : copy.title}
+  description={copy.description}
+  alternate={platform ? platformPath(otherLang, platform) : routes.portfolio[otherLang]}
+>
+  <PageHeader eyebrow={copy.title} title={copy.heading}>
+    <nav class="mt-8" aria-label={t('filter.label')} data-reveal>
+      <ul class="flex flex-wrap gap-2">
+        <li>
+          <a href={routes.portfolio[lang]} class:list={filterClass(!platform)} aria-current={!platform ? 'page' : undefined}>
+            {t('filter.all')} <span class="opacity-70">{count()}</span>
+          </a>
+        </li>
+        {
+          filters.map((p) => (
+            <li>
+              <a href={platformPath(lang, p)} class:list={filterClass(p === platform)} aria-current={p === platform ? 'page' : undefined}>
+                {p} <span class="opacity-70">{count(p)}</span>
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+  </PageHeader>
+  <section class="container-page grid gap-6 sm:grid-cols-2 lg:grid-cols-3" data-reveal-stagger>
+    {apps.map((app) => <AppCard app={app} />)}
+  </section>
+</Base>

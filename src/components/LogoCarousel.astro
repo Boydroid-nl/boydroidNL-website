@@ -1,0 +1,111 @@
+---
+import { Image } from 'astro:assets';
+import { getCollection } from 'astro:content';
+import { type Lang, useTranslations } from '../i18n';
+
+interface Props {
+  lang: Lang;
+}
+const t = useTranslations(Astro.props.lang);
+
+const clients = (await getCollection('clients', ({ data }) => data.current)).sort(
+  (a, b) => a.data.order - b.data.order,
+);
+
+// Repeat short lists so one half of the track is always wider than the viewport.
+const MIN_ITEMS = 10;
+const half = Array.from({ length: Math.max(1, Math.ceil(MIN_ITEMS / Math.max(clients.length, 1))) }, () => clients).flat();
+---
+
+{
+  clients.length > 0 && (
+    <div class="marquee" role="region" aria-label={t('clients.label')}>
+      <ul class="track">
+        {[0, 1].map((copy) =>
+          half.map((client, i) => {
+            // Only the first set is announced; the rest is visual repetition.
+            const decorative = copy === 1 || i >= clients.length;
+            return (
+              <li class:list={['item', decorative && 'dup']} aria-hidden={decorative ? 'true' : undefined}>
+                <a
+                  href={client.data.url}
+                  target={client.data.url ? '_blank' : undefined}
+                  rel="noopener"
+                  tabindex={decorative || !client.data.url ? -1 : undefined}
+                  class="chip"
+                  title={client.data.name}
+                >
+                  {client.data.logo ? (
+                    <Image
+                      src={client.data.logo}
+                      alt={decorative ? '' : client.data.name}
+                      height={40}
+                      class="h-auto max-h-10 w-auto max-w-[10rem] object-contain"
+                    />
+                  ) : (
+                    <span class="text-base font-semibold tracking-tight text-[#323232]">{client.data.name}</span>
+                  )}
+                </a>
+              </li>
+            );
+          }),
+        )}
+      </ul>
+    </div>
+  )
+}
+
+<style>
+  .marquee {
+    overflow: hidden;
+    mask-image: linear-gradient(to right, transparent, #000 6%, #000 94%, transparent);
+  }
+  .track {
+    display: flex;
+    width: max-content;
+    animation: marquee 45s linear infinite;
+  }
+  .marquee:hover .track,
+  .marquee:focus-within .track {
+    animation-play-state: paused;
+  }
+  .item {
+    flex: none;
+    padding-right: 1rem; /* spacing as padding keeps both halves exactly equal */
+  }
+  .chip {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 12.5rem;
+    height: 5rem;
+    padding: 0 1.25rem;
+    border-radius: 0.625rem;
+    border: 1px solid var(--border);
+    background: var(--logo-chip);
+    transition: border-color 0.2s;
+  }
+  .chip:hover {
+    border-color: var(--primary);
+  }
+  @keyframes marquee {
+    to {
+      transform: translateX(-50%);
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .marquee {
+      mask-image: none;
+    }
+    .track {
+      animation: none;
+      width: auto;
+      flex-wrap: wrap;
+      justify-content: center;
+      row-gap: 1rem;
+    }
+    .dup {
+      display: none;
+    }
+  }
+</style>

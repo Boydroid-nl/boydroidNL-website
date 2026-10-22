@@ -1,0 +1,16 @@
+---
+import { getCollection } from 'astro:content';
+import View from '../../views/Portfolio.astro';
+import { platforms, platformSlug, splitAppId } from '../../i18n';
+
+export async function getStaticPaths() {
+  const apps = await getCollection('apps', ({ id, data }) => splitAppId(id).lang === 'nl' && !data.draft);
+  return platforms
+    .filter((p) => apps.some((a) => a.data.platforms.includes(p)))
+    .map((platform) => ({ params: { platform: platformSlug(platform) }, props: { platform } }));
+}
+
+const { platform } = Astro.props;
+---
+
+<View lang="nl" platform={platform} />

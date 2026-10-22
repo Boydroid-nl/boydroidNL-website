@@ -1,0 +1,28 @@
+---
+import { type Lang, type Platform, platformPath, useTranslations } from '../i18n';
+
+interface Props {
+  lang: Lang;
+  platforms: readonly Platform[];
+  class?: string;
+}
+const { lang, platforms, class: className } = Astro.props;
+const t = useTranslations(lang);
+---
+
+{
+  platforms.length > 0 && (
+    <ul class:list={['flex flex-wrap gap-2', className]} aria-label={t('app.platforms')}>
+      {platforms.map((p) => (
+        <li>
+          <a
+            href={platformPath(lang, p)}
+            class="relative z-10 inline-block rounded-md border border-border bg-bg px-2.5 py-1 text-xs font-medium text-muted transition-colors hover:border-primary hover:bg-primary-soft hover:text-primary"
+          >
+            {p}
+          </a>
+        </li>
+      ))}
+    </ul>
+  )
+}
