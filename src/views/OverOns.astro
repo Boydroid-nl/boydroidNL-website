@@ -23,12 +23,12 @@ const copy = {
     whoText: 'Het team van Boydroid.',
     disciplines: [
       {
-        title: 'Developers',
-        text: 'Wij bouwen native-kwaliteit apps voor Android én iOS vanuit één codebase met Flutter. Schone, geteste code die makkelijk door te ontwikkelen is.',
-      },
-      {
         title: 'UX-designers',
         text: 'Van eerste schets tot pixel-perfect ontwerp. We denken vanuit de gebruiker, zodat je app vanaf het eerste scherm logisch en prettig voelt.',
+      },
+      {
+        title: 'Developers',
+        text: 'Wij bouwen native-kwaliteit apps voor Android én iOS vanuit één codebase met Flutter. Schone, geteste code die makkelijk door te ontwikkelen is.',
       },
       {
         title: 'Strategie',
@@ -47,12 +47,12 @@ const copy = {
     whoText: 'The Boydroid team.',
     disciplines: [
       {
-        title: 'Developers',
-        text: 'We build native-quality apps for Android and iOS from a single Flutter codebase. Clean, tested code that is easy to keep building on.',
-      },
-      {
         title: 'UX designers',
         text: 'From first sketch to pixel-perfect design. We think from the user’s point of view, so your app feels logical and pleasant from the very first screen.',
+      },
+      {
+        title: 'Developers',
+        text: 'We build native-quality apps for Android and iOS from a single Flutter codebase. Clean, tested code that is easy to keep building on.',
       },
       {
         title: 'Strategy',
@@ -82,8 +82,8 @@ const copy = {
             <p class="mt-4 text-lg leading-relaxed text-muted">{d.text}</p>
           </div>
           <div class="aspect-[8/5]" data-reveal style="--reveal-delay: 120ms">
-            {i === 0 && <CodeEditor />}
-            {i === 1 && <PhoneDesign />}
+            {i === 0 && <PhoneDesign />}
+            {i === 1 && <CodeEditor />}
             {i === 2 && <Roadmap steps={copy.roadmap} />}
           </div>
         </div>
